@@ -156,5 +156,4 @@ def max_value(board):
     # Looks at all next possible future boards, and determine what O (the minimizer) will do. Choose the max from the minimum utilities of each board
     for action in actions(board):
         max_val = max(max_val, min_value(result(board, action)))
-
     return max_val
