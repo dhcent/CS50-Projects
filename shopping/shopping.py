@@ -59,7 +59,26 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    # Open CSV file 'filename' in read mode. With function automatically 
+    # closes file upon complete execution
+    with open(filename, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        evidence = []
+        labels = []
+        for row in reader[1:]:
+            evidence_to_append = []
+            for i in range (6):
+                if i % 2 == 0:
+                    evidence_to_append.append(int(row[i]))
+                else:
+                    evidence_to_append.append(float(row[i]))
+            for data in row[6:10]:
+                evidence_to_append.append(float(row[data]))
+            for data in row[10:16]:
+                evidence_to_append.append(int(row[data]))
+            evidence.append(evidence_to_append)
+            labels.append(row[16])
+    return (evidence, labels)
 
 
 def train_model(evidence, labels):
@@ -67,7 +86,9 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    model = KNeighborsClassifier(n_neighbors=1)
+    model.fit(evidence, labels)
+    return model
 
 
 def evaluate(labels, predictions):
@@ -85,7 +106,25 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    # Calculate total # of pos/neg and # of pos/neg correctly identified.
+    # Return sensitivity and specificity by dividing correctly identified w/ total
+    total_positives = 0
+    total_positives_correctly_identified = 0
+    total_negatives = 0
+    total_negatives_correctly_identified
+    for label, prediction in zip(labels, predictions):
+        if label == 1: # If label is positive
+            total_positives += 1
+            if predictions == 1: # If we predicted positive (correctly)
+                total_positives_correctly_identified += 1
+        else:
+            total_negatives += 1
+            if predictions == 0:
+                total_negatives_correctly_identified += 1
+    sensitivity = total_positives_correctly_identified / total_positives
+    specificity = total_negatives_correctly_identified / total_negatives
+    return (sensitivity, specificity)
+
 
 
 if __name__ == "__main__":
