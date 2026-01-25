@@ -73,32 +73,38 @@ def load_data(filename):
         "Nov": 10,
         "Dec": 11
     }
+
+    evidence = []
+    labels = []
+
     # Open CSV file 'filename' in read mode. With function automatically 
     # closes file upon complete execution
-    with open(filename, mode='r', newline='') as file:
+    with open(filename, newline='') as file:
         reader = csv.reader(file)
-        evidence = []
-        labels = []
-        for row in reader[1:]:
-            evidence_to_append = []
-            # Alternate between int/float for first 6 col's
-            for i in range (6):
-                if i % 2 == 0:
-                    evidence_to_append.append(int(row[i]))
-                else:
-                    evidence_to_append.append(float(row[i]))
-            for data in row[6:10]:
-                evidence_to_append.append(float(data))
-            # Get corresponding month
-            evidence_to_append.append(month_map[row[10]])
-            for data in row[11:15]:
-                evidence_to_append.append(int(data))
-            evidence_to_append.append(1 if row[15] == "Returning_Visitor" else 0)
-            evidence_to_append.append(1 if row[16] == "TRUE" else 0)
-            
-            evidence.append(evidence_to_append)
+        next(reader)
+
+        for row in reader:
+            evidence.append([
+                int(row[0]),
+                float(row[1]),
+                int(row[2]),
+                float(row[3]),
+                int(row[4]),
+                float(row[5]),
+                float(row[6]),
+                float(row[7]),
+                float(row[8]),
+                float(row[9]),
+                month_map[row[10]],
+                int(row[11]),
+                int(row[12]),
+                int(row[13]),
+                int(row[14]),
+                1 if row[15] == "Returning_Visitor" else 0,
+                1 if row[16] == "TRUE" else 0
+            ])
             labels.append(1 if row[17] == "TRUE" else 0)
-    return (evidence, labels)
+        return evidence, labels
 
 
 def train_model(evidence, labels):
