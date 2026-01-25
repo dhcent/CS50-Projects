@@ -59,6 +59,20 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
+    month_map = {
+        "Jan": 0,
+        "Feb": 1,
+        "Mar": 2,
+        "Apr": 3,
+        "May": 4,
+        "Jun": 5,
+        "Jul": 6,
+        "Aug": 7,
+        "Sep": 8,
+        "Oct": 9,
+        "Nov": 10,
+        "Dec": 11
+    }
     # Open CSV file 'filename' in read mode. With function automatically 
     # closes file upon complete execution
     with open(filename, mode='r', newline='') as file:
@@ -67,17 +81,23 @@ def load_data(filename):
         labels = []
         for row in reader[1:]:
             evidence_to_append = []
+            # Alternate between int/float for first 6 col's
             for i in range (6):
                 if i % 2 == 0:
                     evidence_to_append.append(int(row[i]))
                 else:
                     evidence_to_append.append(float(row[i]))
             for data in row[6:10]:
-                evidence_to_append.append(float(row[data]))
-            for data in row[10:16]:
-                evidence_to_append.append(int(row[data]))
+                evidence_to_append.append(float(data))
+            # Get corresponding month
+            evidence_to_append.append(month_map[row[10]])
+            for data in row[11:15]:
+                evidence_to_append.append(int(data))
+            evidence_to_append.append(1 if row[15] == "Returning_Visitor" else 0)
+            evidence_to_append.append(1 if row[16] == "TRUE" else 0)
+            
             evidence.append(evidence_to_append)
-            labels.append(row[16])
+            labels.append(1 if row[17] == "TRUE" else 0)
     return (evidence, labels)
 
 
@@ -111,15 +131,15 @@ def evaluate(labels, predictions):
     total_positives = 0
     total_positives_correctly_identified = 0
     total_negatives = 0
-    total_negatives_correctly_identified
+    total_negatives_correctly_identified = 0
     for label, prediction in zip(labels, predictions):
         if label == 1: # If label is positive
             total_positives += 1
-            if predictions == 1: # If we predicted positive (correctly)
+            if prediction == 1: # If we predicted positive (correctly)
                 total_positives_correctly_identified += 1
         else:
             total_negatives += 1
-            if predictions == 0:
+            if prediction == 0:
                 total_negatives_correctly_identified += 1
     sensitivity = total_positives_correctly_identified / total_positives
     specificity = total_negatives_correctly_identified / total_negatives
