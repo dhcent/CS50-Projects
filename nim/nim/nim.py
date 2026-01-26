@@ -138,7 +138,7 @@ class NimAI():
         max_reward = 0
         for action in actions:
             if self.get_q_value(state, action) > max_reward:
-                max = self.get_q_value(state, action) # Update if value is larger
+                max_reward = self.get_q_value(state, action) # Update if value is larger
         return max_reward
 
     def choose_action(self, state, epsilon=True):

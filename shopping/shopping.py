@@ -65,7 +65,7 @@ def load_data(filename):
         "Mar": 2,
         "Apr": 3,
         "May": 4,
-        "Jun": 5,
+        "June": 5,
         "Jul": 6,
         "Aug": 7,
         "Sep": 8,
@@ -82,7 +82,6 @@ def load_data(filename):
     with open(filename, newline='') as file:
         reader = csv.reader(file)
         next(reader)
-
         for row in reader:
             evidence.append([
                 int(row[0]),
