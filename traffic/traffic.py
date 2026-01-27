@@ -62,6 +62,7 @@ def load_data(data_dir):
     labels = []
 
     for category in range(NUM_CATEGORIES):
+        print(f"Loading category {category}")
         # Find path to corresponding category directory
         category_path = os.path.join(data_dir, str(category))
         # If path is a valid directory
@@ -74,6 +75,7 @@ def load_data(data_dir):
                 image = cv2.imread(image_path)
                 if image is not None:
                     image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+                    image = image / 255 # Normalize for smaller values
                     images.append(image)
                     labels.append(category)
     return images, labels
